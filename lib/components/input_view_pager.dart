@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:credit_card_input_form/constants/captions.dart';
 import 'package:credit_card_input_form/util/util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:credit_card_input_form/constants/constanst.dart';
 import 'package:credit_card_input_form/provider/card_cvv_provider.dart';
 import 'package:credit_card_input_form/provider/card_name_provider.dart';
@@ -57,7 +60,7 @@ class _InputViewPagerState extends State<InputViewPager> {
     });
 
     return Container(
-        height: 86,
+      height: 87,
         child: PageView.builder(
             physics: NeverScrollableScrollPhysics(),
             controller: widget.pageController,
@@ -177,6 +180,20 @@ class _InputFormState extends State<InputForm> {
         .getCurrentState()
         .index;
 
+    final captions = Provider.of<Captions>(context);
+    var hint = "";
+    if (widget.index == InputState.NUMBER.index) {
+      hint = captions.getCaption('CARD_NUMBER');
+    } else if (widget.index == InputState.NAME.index) {
+      hint = captions.getCaption('CARDHOLDER_NAME');
+    } else if (widget.index == InputState.VALIDATE.index) {
+      hint = captions.getCaption('VALID_THRU');
+    } else if (widget.index == InputState.CVV.index) {
+      hint = captions.getCaption('SECURITY_CODE_CVC');
+    }
+
+    final textCapitalization = TextCapitalization.characters;
+
     return Opacity(
       opacity: opacicy,
       child: Container(
@@ -190,7 +207,7 @@ class _InputFormState extends State<InputForm> {
             SizedBox(
               height: 5,
             ),
-            TextField(
+            Platform.isAndroid ? TextField(
               autocorrect: false,
               autofocus: widget.index == index,
               controller: textController
@@ -202,6 +219,7 @@ class _InputFormState extends State<InputForm> {
                 ),
               focusNode: widget.focusNode,
               keyboardType: textInputType,
+              textCapitalization: textCapitalization,
               maxLength: maxLength,
               onChanged: (String newValue) {
                 if (widget.index == InputState.NUMBER.index) {
@@ -219,6 +237,7 @@ class _InputFormState extends State<InputForm> {
                 }
               },
               decoration: InputDecoration(
+                hintText: hint,
                 isDense: true,
                 counter: SizedBox(
                   height: 0,
@@ -232,6 +251,36 @@ class _InputFormState extends State<InputForm> {
                     borderSide: BorderSide(width: 1, color: Colors.black38),
                     borderRadius: BorderRadius.circular(5)),
               ),
+            ) : CupertinoTextField(
+              autocorrect: false,
+              autofocus: widget.index == index,
+              controller: textController
+                ..value = textController.value.copyWith(
+                  text: textValue,
+                  selection: TextSelection.fromPosition(
+                    TextPosition(offset: textValue.length),
+                  ),
+                ),
+              focusNode: widget.focusNode,
+              keyboardType: textInputType,
+              textCapitalization: textCapitalization,
+              maxLength: maxLength,
+              onChanged: (String newValue) {
+                if (widget.index == InputState.NUMBER.index) {
+                  Provider.of<CardNumberProvider>(context, listen: false)
+                      .setNumber(newValue);
+                } else if (widget.index == InputState.NAME.index) {
+                  Provider.of<CardNameProvider>(context, listen: false)
+                      .setName(newValue);
+                } else if (widget.index == InputState.VALIDATE.index) {
+                  Provider.of<CardValidProvider>(context, listen: false)
+                      .setValid(newValue);
+                } else if (widget.index == InputState.CVV.index) {
+                  Provider.of<CardCVVProvider>(context, listen: false)
+                      .setCVV(newValue);
+                }
+              },
+              placeholder: hint,
             )
           ],
         ),

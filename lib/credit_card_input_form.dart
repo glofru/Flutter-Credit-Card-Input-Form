@@ -196,123 +196,127 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
         ? widget.backDecoration
         : defaultCardDecoration;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: FlipCard(
-            speed: 300,
-            flipOnTouch: _currentState == InputState.DONE,
-            key: cardKey,
-            front:
-                FrontCardView(height: cardHeight, decoration: frontDecoration),
-            back: BackCardView(height: cardHeight, decoration: backDecoration),
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FlipCard(
+              speed: 300,
+              flipOnTouch: _currentState == InputState.DONE,
+              key: cardKey,
+              front: FrontCardView(
+                  height: cardHeight, decoration: frontDecoration),
+              back:
+                  BackCardView(height: cardHeight, decoration: backDecoration),
+            ),
           ),
-        ),
-        Stack(
-          children: [
+          Stack(
+            children: [
+              AnimatedOpacity(
+                opacity: _currentState == InputState.DONE ? 0 : 1,
+                duration: Duration(milliseconds: 500),
+                child: InputViewPager(
+                  pageController: pageController,
+                ),
+              ),
+              Align(
+                  alignment: Alignment.center,
+                  child: AnimatedOpacity(
+                      opacity: widget.showResetButton &&
+                              _currentState == InputState.DONE
+                          ? 1
+                          : 0,
+                      duration: Duration(milliseconds: 500),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ResetButton(
+                          decoration: widget.resetButtonDecoration,
+                          textStyle: widget.resetButtonTextStyle,
+                          onTap: () {
+                            if (!widget.showResetButton) {
+                              return;
+                            }
+
+                            Provider.of<StateProvider>(context, listen: false)
+                                .moveFirstState();
+                            pageController.animateToPage(0,
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.easeIn);
+
+                            if (!cardKey.currentState.isFront) {
+                              cardKey.currentState.toggleCard();
+                            }
+                          },
+                        ),
+                      ))),
+            ],
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+            AnimatedOpacity(
+              opacity: _currentState == InputState.NUMBER ||
+                      _currentState == InputState.DONE
+                  ? 0
+                  : 1,
+              duration: Duration(milliseconds: 500),
+              child: RoundButton(
+                  decoration: widget.prevButtonDecoration,
+                  textStyle: widget.prevButtonTextStyle,
+                  buttonTitle: captions.getCaption('PREV'),
+                  onTap: () {
+                    if (InputState.DONE == _currentState) {
+                      return;
+                    }
+
+                    if (InputState.NUMBER != _currentState) {
+                      pageController.previousPage(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                    }
+
+                    if (InputState.CVV == _currentState) {
+                      cardKey.currentState.toggleCard();
+                    }
+                    Provider.of<StateProvider>(context, listen: false)
+                        .movePrevState();
+                  }),
+            ),
+            SizedBox(
+              width: 10,
+            ),
             AnimatedOpacity(
               opacity: _currentState == InputState.DONE ? 0 : 1,
               duration: Duration(milliseconds: 500),
-              child: InputViewPager(
-                pageController: pageController,
-              ),
+              child: RoundButton(
+                  decoration: widget.nextButtonDecoration,
+                  textStyle: widget.nextButtonTextStyle,
+                  buttonTitle: _currentState == InputState.CVV ||
+                          _currentState == InputState.DONE
+                      ? captions.getCaption('DONE')
+                      : captions.getCaption('NEXT'),
+                  onTap: () {
+                    if (InputState.CVV != _currentState) {
+                      pageController.nextPage(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                    }
+
+                    if (InputState.VALIDATE == _currentState) {
+                      cardKey.currentState.toggleCard();
+                    }
+
+                    Provider.of<StateProvider>(context, listen: false)
+                        .moveNextState();
+                  }),
             ),
-            Align(
-                alignment: Alignment.center,
-                child: AnimatedOpacity(
-                    opacity: widget.showResetButton &&
-                            _currentState == InputState.DONE
-                        ? 1
-                        : 0,
-                    duration: Duration(milliseconds: 500),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ResetButton(
-                        decoration: widget.resetButtonDecoration,
-                        textStyle: widget.resetButtonTextStyle,
-                        onTap: () {
-                          if (!widget.showResetButton) {
-                            return;
-                          }
-
-                          Provider.of<StateProvider>(context, listen: false)
-                              .moveFirstState();
-                          pageController.animateToPage(0,
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.easeIn);
-
-                          if (!cardKey.currentState.isFront) {
-                            cardKey.currentState.toggleCard();
-                          }
-                        },
-                      ),
-                    ))),
-          ],
-        ),
-        Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-          AnimatedOpacity(
-            opacity: _currentState == InputState.NUMBER ||
-                    _currentState == InputState.DONE
-                ? 0
-                : 1,
-            duration: Duration(milliseconds: 500),
-            child: RoundButton(
-                decoration: widget.prevButtonDecoration,
-                textStyle: widget.prevButtonTextStyle,
-                buttonTitle: captions.getCaption('PREV'),
-                onTap: () {
-                  if (InputState.DONE == _currentState) {
-                    return;
-                  }
-
-                  if (InputState.NUMBER != _currentState) {
-                    pageController.previousPage(
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                  }
-
-                  if (InputState.CVV == _currentState) {
-                    cardKey.currentState.toggleCard();
-                  }
-                  Provider.of<StateProvider>(context, listen: false)
-                      .movePrevState();
-                }),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          AnimatedOpacity(
-            opacity: _currentState == InputState.DONE ? 0 : 1,
-            duration: Duration(milliseconds: 500),
-            child: RoundButton(
-                decoration: widget.nextButtonDecoration,
-                textStyle: widget.nextButtonTextStyle,
-                buttonTitle: _currentState == InputState.CVV ||
-                        _currentState == InputState.DONE
-                    ? captions.getCaption('DONE')
-                    : captions.getCaption('NEXT'),
-                onTap: () {
-                  if (InputState.CVV != _currentState) {
-                    pageController.nextPage(
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                  }
-
-                  if (InputState.VALIDATE == _currentState) {
-                    cardKey.currentState.toggleCard();
-                  }
-
-                  Provider.of<StateProvider>(context, listen: false)
-                      .moveNextState();
-                }),
-          ),
-          SizedBox(
-            width: 25,
-          )
-        ])
-      ],
+            SizedBox(
+              width: 25,
+            )
+          ])
+        ],
+      ),
     );
   }
 }
