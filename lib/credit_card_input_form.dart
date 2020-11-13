@@ -28,6 +28,7 @@ class CreditCardInputForm extends StatelessWidget {
       this.frontCardDecoration,
       this.backCardDecoration,
       this.showResetButton = true,
+      this.showOnlyCard = false,
       this.customCaptions,
       this.cardNumber = '',
       this.cardName = '',
@@ -46,6 +47,7 @@ class CreditCardInputForm extends StatelessWidget {
   final BoxDecoration frontCardDecoration;
   final BoxDecoration backCardDecoration;
   final bool showResetButton;
+  final bool showOnlyCard;
   final Map<String, String> customCaptions;
   final BoxDecoration nextButtonDecoration;
   final BoxDecoration prevButtonDecoration;
@@ -88,6 +90,7 @@ class CreditCardInputForm extends StatelessWidget {
         frontDecoration: frontCardDecoration,
         cardHeight: cardHeight,
         showResetButton: showResetButton,
+        showOnlyCard: showOnlyCard,
         prevButtonDecoration: prevButtonDecoration,
         nextButtonDecoration: nextButtonDecoration,
         resetButtonDecoration: resetButtonDecoration,
@@ -106,6 +109,7 @@ class CreditCardInputImpl extends StatefulWidget {
   final BoxDecoration frontDecoration;
   final BoxDecoration backDecoration;
   final bool showResetButton;
+  final bool showOnlyCard;
   final BoxDecoration nextButtonDecoration;
   final BoxDecoration prevButtonDecoration;
   final BoxDecoration resetButtonDecoration;
@@ -118,6 +122,7 @@ class CreditCardInputImpl extends StatefulWidget {
       {this.onCardModelChanged,
       this.cardHeight,
       this.showResetButton,
+      this.showOnlyCard,
       this.frontDecoration,
       this.backDecoration,
       this.nextButtonTextStyle,
@@ -213,7 +218,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
                   BackCardView(height: cardHeight, decoration: backDecoration),
             ),
           ),
-          Stack(
+          if (!widget.showOnlyCard) Stack(
             children: [
               AnimatedOpacity(
                 opacity: _currentState == InputState.DONE ? 0 : 1,
@@ -254,7 +259,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
                       ))),
             ],
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+          if (!widget.showOnlyCard) Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
             AnimatedOpacity(
               opacity: _currentState == InputState.NUMBER ||
                       _currentState == InputState.DONE
