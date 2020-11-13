@@ -5,11 +5,20 @@ import 'package:credit_card_input_form/provider/card_number_provider.dart';
 import 'package:provider/provider.dart';
 
 class CardLogo extends StatelessWidget {
+  const CardLogo({this.company});
+
+  final String company;
+
   @override
   Widget build(BuildContext context) {
     String cardNumber = Provider.of<CardNumberProvider>(context).cardNumber;
 
-    CardCompany cardCompany = detectCardCompany(cardNumber);
+    CardCompany cardCompany;
+    if (company != null) {
+      cardCompany = CardCompanyExtension.fromString(company);
+    } else {
+      cardCompany = detectCardCompany(cardNumber);
+    }
 
     return Stack(
       children: <Widget>[

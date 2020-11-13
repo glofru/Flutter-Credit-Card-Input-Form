@@ -11,8 +11,10 @@ import 'card_valid.dart';
 class FrontCardView extends StatelessWidget {
   final height;
   final decoration;
+  final cardCompany;
+  final obscureNumber;
 
-  FrontCardView({this.height, this.decoration});
+  FrontCardView({this.height, this.decoration, this.cardCompany, this.obscureNumber = false});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +31,9 @@ class FrontCardView extends StatelessWidget {
             YellowBorder(),
             Align(
               alignment: Alignment.centerLeft,
-              child: CardNumber(),
+              child: CardNumber(obscured: obscureNumber),
             ),
-            Align(alignment: Alignment.topRight, child: CardLogo()),
+            Align(alignment: Alignment.topRight, child: CardLogo(company: cardCompany)),
             Align(
               alignment: Alignment.bottomLeft,
               child: Padding(

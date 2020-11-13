@@ -117,3 +117,15 @@ const defaultCardDecoration = BoxDecoration(
 enum InputState { NUMBER, NAME, VALIDATE, CVV, DONE }
 
 enum CardCompany { VISA, MASTER, AMERICAN_EXPRESS, DISCOVER, OTHER }
+
+extension CardCompanyExtension on CardCompany {
+  static CardCompany fromString(String s) {
+    switch (s) {
+      case 'VISA': return CardCompany.VISA;
+      case 'MASTERCARD': case 'MAESTRO': return CardCompany.MASTER;
+      case 'AMERICANEXPRESS': return CardCompany.AMERICAN_EXPRESS;
+      case 'DISCOVER': return CardCompany.DISCOVER;
+      default: return CardCompany.OTHER;
+    }
+  }
+}

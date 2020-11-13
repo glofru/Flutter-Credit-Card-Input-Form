@@ -29,6 +29,8 @@ class CreditCardInputForm extends StatelessWidget {
       this.backCardDecoration,
       this.showResetButton = true,
       this.showOnlyCard = false,
+      this.obscureNumber = false,
+      this.cardCompany,
       this.customCaptions,
       this.cardNumber = '',
       this.cardName = '',
@@ -48,6 +50,8 @@ class CreditCardInputForm extends StatelessWidget {
   final BoxDecoration backCardDecoration;
   final bool showResetButton;
   final bool showOnlyCard;
+  final bool obscureNumber;
+  final String cardCompany;
   final Map<String, String> customCaptions;
   final BoxDecoration nextButtonDecoration;
   final BoxDecoration prevButtonDecoration;
@@ -91,6 +95,8 @@ class CreditCardInputForm extends StatelessWidget {
         cardHeight: cardHeight,
         showResetButton: showResetButton,
         showOnlyCard: showOnlyCard,
+        obscureNumber: obscureNumber,
+        cardCompany: cardCompany,
         prevButtonDecoration: prevButtonDecoration,
         nextButtonDecoration: nextButtonDecoration,
         resetButtonDecoration: resetButtonDecoration,
@@ -110,6 +116,8 @@ class CreditCardInputImpl extends StatefulWidget {
   final BoxDecoration backDecoration;
   final bool showResetButton;
   final bool showOnlyCard;
+  final bool obscureNumber;
+  final String cardCompany;
   final BoxDecoration nextButtonDecoration;
   final BoxDecoration prevButtonDecoration;
   final BoxDecoration resetButtonDecoration;
@@ -123,6 +131,8 @@ class CreditCardInputImpl extends StatefulWidget {
       this.cardHeight,
       this.showResetButton,
       this.showOnlyCard,
+      this.obscureNumber,
+      this.cardCompany,
       this.frontDecoration,
       this.backDecoration,
       this.nextButtonTextStyle,
@@ -213,7 +223,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
               flipOnTouch: _currentState == InputState.DONE,
               key: cardKey,
               front: FrontCardView(
-                  height: cardHeight, decoration: frontDecoration),
+                  height: cardHeight, decoration: frontDecoration, obscureNumber: widget.obscureNumber, cardCompany: widget.cardCompany),
               back:
                   BackCardView(height: cardHeight, decoration: backDecoration),
             ),
