@@ -27,7 +27,7 @@ class YellowBorder extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(7.5),
             border: Border.all(
-              color: Colors.yellow, //                   <--- border color
+              color: Color(0xFFD0D02F), //                   <--- border color
               width: 1.0,
             ),
           ),
