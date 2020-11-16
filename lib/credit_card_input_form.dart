@@ -23,7 +23,8 @@ typedef CardInfoCallback = void Function(
 
 class CreditCardInputForm extends StatelessWidget {
   CreditCardInputForm(
-      {this.onStateChange,
+      {Key key,
+      this.onStateChange,
       this.cardHeight,
       this.frontCardDecoration,
       this.backCardDecoration,
@@ -42,7 +43,7 @@ class CreditCardInputForm extends StatelessWidget {
       this.resetButtonTextStyle = kDefaultButtonTextStyle,
       this.nextButtonDecoration = defaultNextPrevButtonDecoration,
       this.prevButtonDecoration = defaultNextPrevButtonDecoration,
-      this.resetButtonDecoration = defaultResetButtonDecoration});
+      this.resetButtonDecoration = defaultResetButtonDecoration}) : super(key: key);
 
   final Function onStateChange;
   final double cardHeight;
