@@ -159,6 +159,26 @@ class _InputFormState extends State<InputForm> {
 
   var isInit = false;
 
+  void onChangedText(String newValue) {
+    if (widget.index == InputState.NUMBER.index) {
+      if (CardCompany.AMERICAN_EXPRESS == detectCardCompany(newValue)) {
+        maxLength = 18;
+      }
+
+      Provider.of<CardNumberProvider>(context, listen: false)
+          .setNumber(newValue);
+    } else if (widget.index == InputState.NAME.index) {
+      Provider.of<CardNameProvider>(context, listen: false)
+          .setName(newValue);
+    } else if (widget.index == InputState.VALIDATE.index) {
+      Provider.of<CardValidProvider>(context, listen: false)
+          .setValid(newValue);
+    } else if (widget.index == InputState.CVV.index) {
+      Provider.of<CardCVVProvider>(context, listen: false)
+          .setCVV(newValue);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String textValue = "";
@@ -221,21 +241,7 @@ class _InputFormState extends State<InputForm> {
               keyboardType: textInputType,
               textCapitalization: textCapitalization,
               maxLength: maxLength,
-              onChanged: (String newValue) {
-                if (widget.index == InputState.NUMBER.index) {
-                  Provider.of<CardNumberProvider>(context, listen: false)
-                      .setNumber(newValue);
-                } else if (widget.index == InputState.NAME.index) {
-                  Provider.of<CardNameProvider>(context, listen: false)
-                      .setName(newValue);
-                } else if (widget.index == InputState.VALIDATE.index) {
-                  Provider.of<CardValidProvider>(context, listen: false)
-                      .setValid(newValue);
-                } else if (widget.index == InputState.CVV.index) {
-                  Provider.of<CardCVVProvider>(context, listen: false)
-                      .setCVV(newValue);
-                }
-              },
+              onChanged: onChangedText,
               decoration: InputDecoration(
                 hintText: hint,
                 isDense: true,
@@ -265,21 +271,7 @@ class _InputFormState extends State<InputForm> {
               keyboardType: textInputType,
               textCapitalization: textCapitalization,
               maxLength: maxLength,
-              onChanged: (String newValue) {
-                if (widget.index == InputState.NUMBER.index) {
-                  Provider.of<CardNumberProvider>(context, listen: false)
-                      .setNumber(newValue);
-                } else if (widget.index == InputState.NAME.index) {
-                  Provider.of<CardNameProvider>(context, listen: false)
-                      .setName(newValue);
-                } else if (widget.index == InputState.VALIDATE.index) {
-                  Provider.of<CardValidProvider>(context, listen: false)
-                      .setValid(newValue);
-                } else if (widget.index == InputState.CVV.index) {
-                  Provider.of<CardCVVProvider>(context, listen: false)
-                      .setCVV(newValue);
-                }
-              },
+              onChanged: onChangedText,
               placeholder: hint,
             )
           ],
