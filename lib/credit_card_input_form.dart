@@ -31,6 +31,9 @@ class CreditCardInputForm extends StatelessWidget {
       this.showResetButton = true,
       this.showOnlyCard = false,
       this.obscureNumber = false,
+      this.numberTextSize,
+      this.expiryTextSize,
+      this.nameTextSize,
       this.cardCompany,
       this.customCaptions,
       this.cardNumber = '',
@@ -52,6 +55,9 @@ class CreditCardInputForm extends StatelessWidget {
   final bool showResetButton;
   final bool showOnlyCard;
   final bool obscureNumber;
+  final double numberTextSize;
+  final double expiryTextSize;
+  final double nameTextSize;
   final String cardCompany;
   final Map<String, String> customCaptions;
   final BoxDecoration nextButtonDecoration;
@@ -97,6 +103,9 @@ class CreditCardInputForm extends StatelessWidget {
         showResetButton: showResetButton,
         showOnlyCard: showOnlyCard,
         obscureNumber: obscureNumber,
+        numberTextSize: numberTextSize,
+        expiryTextSize: expiryTextSize,
+        nameTextSize: nameTextSize,
         cardCompany: cardCompany,
         prevButtonDecoration: prevButtonDecoration,
         nextButtonDecoration: nextButtonDecoration,
@@ -118,6 +127,9 @@ class CreditCardInputImpl extends StatefulWidget {
   final bool showResetButton;
   final bool showOnlyCard;
   final bool obscureNumber;
+  final double numberTextSize;
+  final double expiryTextSize;
+  final double nameTextSize;
   final String cardCompany;
   final BoxDecoration nextButtonDecoration;
   final BoxDecoration prevButtonDecoration;
@@ -133,6 +145,9 @@ class CreditCardInputImpl extends StatefulWidget {
       this.showResetButton,
       this.showOnlyCard,
       this.obscureNumber,
+      this.numberTextSize,
+      this.expiryTextSize,
+      this.nameTextSize,
       this.cardCompany,
       this.frontDecoration,
       this.backDecoration,
@@ -224,7 +239,14 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
               flipOnTouch: _currentState == InputState.DONE,
               key: cardKey,
               front: FrontCardView(
-                  height: cardHeight, decoration: frontDecoration, obscureNumber: widget.obscureNumber, cardCompany: widget.cardCompany),
+                height: cardHeight,
+                decoration: frontDecoration,
+                obscureNumber: widget.obscureNumber,
+                cardCompany: widget.cardCompany,
+                numberTextSize: widget.numberTextSize,
+                expiryTextSize: widget.expiryTextSize,
+                nameTextSize: widget.nameTextSize
+              ),
               back:
                   BackCardView(height: cardHeight, decoration: backDecoration),
             ),

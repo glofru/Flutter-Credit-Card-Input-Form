@@ -5,6 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:credit_card_input_form/constants/constanst.dart';
 
 class CardValid extends StatelessWidget {
+  const CardValid({this.fontSize});
+
+  final double fontSize;
+
   @override
   Widget build(BuildContext context) {
     String inputCardValid = Provider.of<CardValidProvider>(context).cardValid;
@@ -14,6 +18,16 @@ class CardValid extends StatelessWidget {
         .substring(inputCardValid.length);
 
     inputCardValid = inputCardValid.replaceAll("/", "");
+
+    TextStyle validTextStyle, defaultValidStyle;
+
+    if (fontSize != null) {
+      validTextStyle = kValidtextStyle.copyWith(fontSize: fontSize);
+      defaultValidStyle = kDefaultValidTextStyle.copyWith(fontSize: fontSize);
+    } else {
+      validTextStyle = kValidtextStyle;
+      defaultValidStyle = kDefaultValidTextStyle;
+    }
 
     switch (inputCardValid.length) {
       case 3:
@@ -35,11 +49,11 @@ class CardValid extends StatelessWidget {
       children: <Widget>[
         Text(
           inputCardValid,
-          style: kValidtextStyle,
+          style: validTextStyle,
         ),
         Text(
           defaultCardValid,
-          style: kDefaultValidTextStyle,
+          style: defaultValidStyle,
         )
       ],
     ));

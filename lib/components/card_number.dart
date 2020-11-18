@@ -5,9 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:credit_card_input_form/constants/constanst.dart';
 
 class CardNumber extends StatelessWidget {
-  const CardNumber({this.obscured = false});
+  const CardNumber({this.obscured = false, this.fontSize});
 
   final bool obscured;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +16,22 @@ class CardNumber extends StatelessWidget {
         Provider.of<CardNumberProvider>(context, listen: true).cardNumber;
     String defaultNumber = '';
     final texts = <Widget>[];
+    TextStyle cardDefaultStyle, cardNumberStyle;
+
+    if (fontSize != null) {
+      cardDefaultStyle = kCardDefaultTextStyle.copyWith(fontSize: fontSize);
+      cardNumberStyle = kCardNumberTextStyle.copyWith(fontSize: fontSize);
+    } else {
+      cardDefaultStyle = kCardDefaultTextStyle;
+      cardNumberStyle = kCardNumberTextStyle;
+    }
 
     if (obscured) {
       defaultNumber = "**** **** **** ";
       cardNumber = cardNumber.substring(cardNumber.length-4, cardNumber.length);
 
-      texts.add(Text(defaultNumber, style: kCardDefaultTextStyle));
-      texts.add(Text(cardNumber, style: kCardNumberTextStyle));
+      texts.add(Text(defaultNumber, style: cardDefaultStyle));
+      texts.add(Text(cardNumber, style: cardNumberStyle));
     } else {
       final numberLength = cardNumber.replaceAll(" ", "").length;
 
@@ -32,8 +42,8 @@ class CardNumber extends StatelessWidget {
         }
       }
 
-      texts.add(Text(cardNumber, style: kCardNumberTextStyle));
-      texts.add(Text(defaultNumber, style: kCardDefaultTextStyle));
+      texts.add(Text(cardNumber, style: cardNumberStyle));
+      texts.add(Text(defaultNumber, style: cardDefaultStyle));
     }
 
     return Container(
