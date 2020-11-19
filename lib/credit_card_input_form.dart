@@ -36,6 +36,7 @@ class CreditCardInputForm extends StatelessWidget {
       this.expiryTextSize,
       this.nameTextSize,
       this.cardCompany,
+      this.validationEnabled = true,
       this.onNumberInvalid,
       this.onValidationInvalid,
       this.onNameInvalid,
@@ -64,6 +65,7 @@ class CreditCardInputForm extends StatelessWidget {
   final double expiryTextSize;
   final double nameTextSize;
   final String cardCompany;
+  final bool validationEnabled;
   final Function(BuildContext) onNumberInvalid;
   final Function(BuildContext) onValidationInvalid;
   final Function(BuildContext) onNameInvalid;
@@ -116,6 +118,7 @@ class CreditCardInputForm extends StatelessWidget {
         expiryTextSize: expiryTextSize,
         nameTextSize: nameTextSize,
         cardCompany: cardCompany,
+        validationEnabled: validationEnabled,
         onNumberInvalid: onNumberInvalid,
         onValidationInvalid: onValidationInvalid,
         onNameInvalid: onNameInvalid,
@@ -144,6 +147,7 @@ class CreditCardInputImpl extends StatefulWidget {
   final double expiryTextSize;
   final double nameTextSize;
   final String cardCompany;
+  final bool validationEnabled;
   final Function(BuildContext) onNumberInvalid;
   final Function(BuildContext) onValidationInvalid;
   final Function(BuildContext) onNameInvalid;
@@ -166,6 +170,7 @@ class CreditCardInputImpl extends StatefulWidget {
       this.expiryTextSize,
       this.nameTextSize,
       this.cardCompany,
+      this.validationEnabled,
       this.onNumberInvalid,
       this.onValidationInvalid,
       this.onNameInvalid,
@@ -360,7 +365,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
                   onTap: () async {
                     if (InputState.NUMBER == _currentState) {
                       final result = _validator.validateCCNum(Provider.of<CardNumberProvider>(context, listen: false).cardNumber);
-                      if (!result.isValid) {
+                      if (widget.validationEnabled && !result.isValid) {
                         if (widget.onNumberInvalid != null) {
                           await widget.onNumberInvalid(context);
                         } else {
@@ -383,7 +388,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
 
                     if (InputState.NAME == _currentState) {
                       final nameValid = Provider.of<CardNameProvider>(context, listen: false).cardName.length > 1;
-                      if (!nameValid) {
+                      if (widget.validationEnabled && !nameValid) {
                         if (widget.onNameInvalid != null) {
                           await widget.onNameInvalid(context);
                         } else {
@@ -406,7 +411,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
 
                     if (InputState.VALIDATE == _currentState) {
                       final result = _validator.validateExpDate(Provider.of<CardValidProvider>(context, listen: false).cardValid);
-                      if (!result.isValid) {
+                      if (widget.validationEnabled && !result.isValid) {
                         if (widget.onValidationInvalid != null) {
                           await widget.onValidationInvalid(context);
                         } else {
@@ -430,7 +435,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
 
                     if (InputState.CVV == _currentState) {
                       final cvvValid = Provider.of<CardCVVProvider>(context, listen: false).cardCVV.length > 2;
-                      if (!cvvValid) {
+                      if (widget.validationEnabled && !cvvValid) {
                         if (widget.onCvvInvalid != null) {
                           await widget.onCvvInvalid(context);
                         } else {
