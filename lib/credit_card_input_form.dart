@@ -335,6 +335,10 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
                       ? captions.getCaption('DONE')
                       : captions.getCaption('NEXT'),
                   onTap: () {
+                    if (InputState.CVV == _currentState && !cardKey.currentState.isFront) {
+                      cardKey.currentState.toggleCard();
+                    }
+
                     if (InputState.CVV != _currentState) {
                       pageController.nextPage(
                           duration: Duration(milliseconds: 300),
