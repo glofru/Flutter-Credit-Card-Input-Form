@@ -1,4 +1,5 @@
 import 'package:credit_card_input_form/components/reset_button.dart';
+import 'package:credit_card_validator/credit_card_validator.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -35,6 +36,10 @@ class CreditCardInputForm extends StatelessWidget {
       this.expiryTextSize,
       this.nameTextSize,
       this.cardCompany,
+      this.onNumberInvalid,
+      this.onValidationInvalid,
+      this.onNameInvalid,
+      this.onCvvInvalid,
       this.customCaptions,
       this.cardNumber = '',
       this.cardName = '',
@@ -59,6 +64,10 @@ class CreditCardInputForm extends StatelessWidget {
   final double expiryTextSize;
   final double nameTextSize;
   final String cardCompany;
+  final Function(BuildContext) onNumberInvalid;
+  final Function(BuildContext) onValidationInvalid;
+  final Function(BuildContext) onNameInvalid;
+  final Function(BuildContext) onCvvInvalid;
   final Map<String, String> customCaptions;
   final BoxDecoration nextButtonDecoration;
   final BoxDecoration prevButtonDecoration;
@@ -107,6 +116,10 @@ class CreditCardInputForm extends StatelessWidget {
         expiryTextSize: expiryTextSize,
         nameTextSize: nameTextSize,
         cardCompany: cardCompany,
+        onNumberInvalid: onNumberInvalid,
+        onValidationInvalid: onValidationInvalid,
+        onNameInvalid: onNameInvalid,
+        onCvvInvalid: onCvvInvalid,
         prevButtonDecoration: prevButtonDecoration,
         nextButtonDecoration: nextButtonDecoration,
         resetButtonDecoration: resetButtonDecoration,
@@ -131,6 +144,10 @@ class CreditCardInputImpl extends StatefulWidget {
   final double expiryTextSize;
   final double nameTextSize;
   final String cardCompany;
+  final Function(BuildContext) onNumberInvalid;
+  final Function(BuildContext) onValidationInvalid;
+  final Function(BuildContext) onNameInvalid;
+  final Function(BuildContext) onCvvInvalid;
   final BoxDecoration nextButtonDecoration;
   final BoxDecoration prevButtonDecoration;
   final BoxDecoration resetButtonDecoration;
@@ -149,6 +166,10 @@ class CreditCardInputImpl extends StatefulWidget {
       this.expiryTextSize,
       this.nameTextSize,
       this.cardCompany,
+      this.onNumberInvalid,
+      this.onValidationInvalid,
+      this.onNameInvalid,
+      this.onCvvInvalid,
       this.frontDecoration,
       this.backDecoration,
       this.nextButtonTextStyle,
@@ -167,6 +188,8 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
   PageController pageController;
 
   final GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
+
+  final _validator = CreditCardValidator();
 
   final cardHorizontalpadding = 12;
   final cardRatio = 16.0 / 9.0;
@@ -334,19 +357,108 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
                           _currentState == InputState.DONE
                       ? captions.getCaption('DONE')
                       : captions.getCaption('NEXT'),
-                  onTap: () {
-                    if (InputState.CVV == _currentState && !cardKey.currentState.isFront) {
+                  onTap: () async {
+                    if (InputState.NUMBER == _currentState) {
+                      final result = _validator.validateCCNum(Provider.of<CardNumberProvider>(context, listen: false).cardNumber);
+                      if (!result.isValid) {
+                        if (widget.onNumberInvalid != null) {
+                          await widget.onNumberInvalid(context);
+                        } else {
+                          await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text("Number not valid"),
+                              actions: [
+                                FlatButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text("Ok")
+                                )
+                              ],
+                            )
+                          );
+                        }
+                        return;
+                      }
+                    }
+
+                    if (InputState.NAME == _currentState) {
+                      final nameValid = Provider.of<CardNameProvider>(context, listen: false).cardName.length > 1;
+                      if (!nameValid) {
+                        if (widget.onNameInvalid != null) {
+                          await widget.onNameInvalid(context);
+                        } else {
+                          await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text("Name not valid"),
+                              actions: [
+                                FlatButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text("Ok")
+                                )
+                              ],
+                            )
+                          );
+                        }
+                        return;
+                      }
+                    }
+
+                    if (InputState.VALIDATE == _currentState) {
+                      final result = _validator.validateExpDate(Provider.of<CardValidProvider>(context, listen: false).cardValid);
+                      if (!result.isValid) {
+                        if (widget.onValidationInvalid != null) {
+                          await widget.onValidationInvalid(context);
+                        } else {
+                          await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text("Validation date not valid"),
+                              actions: [
+                                FlatButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text("Ok")
+                                )
+                              ],
+                            )
+                          );
+                        }
+                        return;
+                      }
                       cardKey.currentState.toggleCard();
+                    }
+
+                    if (InputState.CVV == _currentState) {
+                      final cvvValid = Provider.of<CardCVVProvider>(context, listen: false).cardCVV.length > 2;
+                      if (!cvvValid) {
+                        if (widget.onCvvInvalid != null) {
+                          await widget.onCvvInvalid(context);
+                        } else {
+                          await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text("Cvv not valid"),
+                              actions: [
+                                FlatButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text("Ok")
+                                )
+                              ],
+                            )
+                          );
+                        }
+                        return;
+                      }
+
+                      if (!cardKey.currentState.isFront) {
+                        cardKey.currentState.toggleCard();
+                      }
                     }
 
                     if (InputState.CVV != _currentState) {
                       pageController.nextPage(
                           duration: Duration(milliseconds: 300),
                           curve: Curves.easeIn);
-                    }
-
-                    if (InputState.VALIDATE == _currentState) {
-                      cardKey.currentState.toggleCard();
                     }
 
                     Provider.of<StateProvider>(context, listen: false)

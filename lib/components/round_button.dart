@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../constants/constanst.dart';
 
 class RoundButton extends StatefulWidget {
-  final Function onTap;
+  final VoidCallback onTap;
   final buttonTitle;
   final decoration;
   final textStyle;
