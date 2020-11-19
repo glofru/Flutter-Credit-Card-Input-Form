@@ -48,6 +48,18 @@ class _RoundButtonState extends State<RoundButton> {
           pressed = false;
         });
       },
+      onTapCancel: () {
+        final currentState = Provider.of<StateProvider>(context, listen: false)
+            .getCurrentState();
+
+        if (currentState == InputState.DONE) {
+          return;
+        }
+
+        setState(() {
+          pressed = false;
+        });
+      },
       child: AnimatedContainer(
         margin: EdgeInsets.symmetric(horizontal: pressed ? 2.5 : 0),
         duration: Duration(milliseconds: 100),

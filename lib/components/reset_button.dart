@@ -32,23 +32,27 @@ class _ResetButtonState extends State<ResetButton> {
           pressed = false;
         });
       },
+      onTapCancel: () {
+        setState(() {
+          pressed = false;
+        });
+      },
       child: AnimatedContainer(
-          margin: EdgeInsets.symmetric(horizontal: pressed ? 2.5 : 0),
+          padding: EdgeInsets.symmetric(horizontal: pressed ? 2 : 8),
           duration: Duration(milliseconds: 100),
-          width: 95 - (pressed ? 5.0 : 0.0),
           height: 45 - (pressed ? 5.0 : 0.0),
           decoration: widget.decoration,
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.refresh,
-                  color: Colors.white,
-                ),
-                Text(captions.getCaption('RESET'), style: widget.textStyle)
-              ],
-            ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.refresh,
+                color: Colors.white,
+              ),
+              Text(captions.getCaption('RESET'), style: widget.textStyle)
+            ],
           )),
     );
   }
