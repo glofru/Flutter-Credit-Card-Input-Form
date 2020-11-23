@@ -41,6 +41,7 @@ class CreditCardInputForm extends StatelessWidget {
       this.onValidationInvalid,
       this.onNameInvalid,
       this.onCvvInvalid,
+      this.cardHorizontalPadding = 12,
       this.customCaptions,
       this.cardNumber = '',
       this.cardName = '',
@@ -66,6 +67,7 @@ class CreditCardInputForm extends StatelessWidget {
   final double nameTextSize;
   final String cardCompany;
   final bool validationEnabled;
+  final double cardHorizontalPadding;
   final Function(BuildContext) onNumberInvalid;
   final Function(BuildContext) onValidationInvalid;
   final Function(BuildContext) onNameInvalid;
@@ -123,6 +125,7 @@ class CreditCardInputForm extends StatelessWidget {
         onValidationInvalid: onValidationInvalid,
         onNameInvalid: onNameInvalid,
         onCvvInvalid: onCvvInvalid,
+        cardHorizontalPadding: cardHorizontalPadding,
         prevButtonDecoration: prevButtonDecoration,
         nextButtonDecoration: nextButtonDecoration,
         resetButtonDecoration: resetButtonDecoration,
@@ -148,6 +151,7 @@ class CreditCardInputImpl extends StatefulWidget {
   final double nameTextSize;
   final String cardCompany;
   final bool validationEnabled;
+  final double cardHorizontalPadding;
   final Function(BuildContext) onNumberInvalid;
   final Function(BuildContext) onValidationInvalid;
   final Function(BuildContext) onNameInvalid;
@@ -169,6 +173,7 @@ class CreditCardInputImpl extends StatefulWidget {
       this.numberTextSize,
       this.expiryTextSize,
       this.nameTextSize,
+      this.cardHorizontalPadding = 12.0,
       this.cardCompany,
       this.validationEnabled,
       this.onNumberInvalid,
@@ -196,7 +201,6 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
 
   final _validator = CreditCardValidator();
 
-  final cardHorizontalpadding = 12;
   final cardRatio = 16.0 / 9.0;
 
   var _currentState;
@@ -239,7 +243,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
     }
 
     double cardWidth =
-        MediaQuery.of(context).size.width - (2 * cardHorizontalpadding);
+        MediaQuery.of(context).size.width - (2 * widget.cardHorizontalPadding);
 
     double cardHeight;
     if (widget.cardHeight != null && widget.cardHeight > 0) {
@@ -261,7 +265,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: EdgeInsets.symmetric(horizontal: widget.cardHorizontalPadding),
             child: FlipCard(
               speed: 300,
               flipOnTouch: _currentState == InputState.DONE,
