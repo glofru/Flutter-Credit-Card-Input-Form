@@ -42,6 +42,7 @@ class CreditCardInputForm extends StatelessWidget {
       this.onNameInvalid,
       this.onCvvInvalid,
       this.cardHorizontalPadding = 12,
+      this.finalPageExtra,
       this.customCaptions,
       this.cardNumber = '',
       this.cardName = '',
@@ -68,6 +69,7 @@ class CreditCardInputForm extends StatelessWidget {
   final String cardCompany;
   final bool validationEnabled;
   final double cardHorizontalPadding;
+  final List<Widget> finalPageExtra;
   final Function(BuildContext) onNumberInvalid;
   final Function(BuildContext) onValidationInvalid;
   final Function(BuildContext) onNameInvalid;
@@ -126,6 +128,7 @@ class CreditCardInputForm extends StatelessWidget {
         onNameInvalid: onNameInvalid,
         onCvvInvalid: onCvvInvalid,
         cardHorizontalPadding: cardHorizontalPadding,
+        finalPageExtra: finalPageExtra,
         prevButtonDecoration: prevButtonDecoration,
         nextButtonDecoration: nextButtonDecoration,
         resetButtonDecoration: resetButtonDecoration,
@@ -152,6 +155,7 @@ class CreditCardInputImpl extends StatefulWidget {
   final String cardCompany;
   final bool validationEnabled;
   final double cardHorizontalPadding;
+  final List<Widget> finalPageExtra;
   final Function(BuildContext) onNumberInvalid;
   final Function(BuildContext) onValidationInvalid;
   final Function(BuildContext) onNameInvalid;
@@ -174,6 +178,7 @@ class CreditCardInputImpl extends StatefulWidget {
       this.expiryTextSize,
       this.nameTextSize,
       this.cardHorizontalPadding = 12.0,
+      this.finalPageExtra,
       this.cardCompany,
       this.validationEnabled,
       this.onNumberInvalid,
@@ -300,27 +305,33 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
                           ? 1
                           : 0,
                       duration: Duration(milliseconds: 500),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ResetButton(
-                          decoration: widget.resetButtonDecoration,
-                          textStyle: widget.resetButtonTextStyle,
-                          onTap: () {
-                            if (!widget.showResetButton) {
-                              return;
-                            }
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ResetButton(
+                              decoration: widget.resetButtonDecoration,
+                              textStyle: widget.resetButtonTextStyle,
+                              onTap: () {
+                                if (!widget.showResetButton) {
+                                  return;
+                                }
 
-                            Provider.of<StateProvider>(context, listen: false)
-                                .moveFirstState();
-                            pageController.animateToPage(0,
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.easeIn);
+                                Provider.of<StateProvider>(context, listen: false)
+                                    .moveFirstState();
+                                pageController.animateToPage(0,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.easeIn);
 
-                            if (!cardKey.currentState.isFront) {
-                              cardKey.currentState.toggleCard();
-                            }
-                          },
-                        ),
+                                if (!cardKey.currentState.isFront) {
+                                  cardKey.currentState.toggleCard();
+                                }
+                              },
+                            ),
+                          ),
+                          if (_currentState == InputState.DONE && widget.finalPageExtra != null) ...widget.finalPageExtra,
+                        ],
                       ))),
             ],
           ),
