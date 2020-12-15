@@ -32,6 +32,7 @@ class CreditCardInputForm extends StatelessWidget {
       this.showResetButton = true,
       this.showOnlyCard = false,
       this.obscureNumber = false,
+      this.name,
       this.numberTextSize,
       this.expiryTextSize,
       this.nameTextSize,
@@ -63,6 +64,7 @@ class CreditCardInputForm extends StatelessWidget {
   final bool showResetButton;
   final bool showOnlyCard;
   final bool obscureNumber;
+  final String name;
   final double numberTextSize;
   final double expiryTextSize;
   final double nameTextSize;
@@ -118,6 +120,7 @@ class CreditCardInputForm extends StatelessWidget {
         showResetButton: showResetButton,
         showOnlyCard: showOnlyCard,
         obscureNumber: obscureNumber,
+        name: name,
         numberTextSize: numberTextSize,
         expiryTextSize: expiryTextSize,
         nameTextSize: nameTextSize,
@@ -149,6 +152,7 @@ class CreditCardInputImpl extends StatefulWidget {
   final bool showResetButton;
   final bool showOnlyCard;
   final bool obscureNumber;
+  final String name;
   final double numberTextSize;
   final double expiryTextSize;
   final double nameTextSize;
@@ -174,6 +178,7 @@ class CreditCardInputImpl extends StatefulWidget {
       this.showResetButton,
       this.showOnlyCard,
       this.obscureNumber,
+      this.name,
       this.numberTextSize,
       this.expiryTextSize,
       this.nameTextSize,
@@ -279,6 +284,7 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
                 height: cardHeight,
                 decoration: frontDecoration,
                 obscureNumber: widget.obscureNumber,
+                name: widget.name,
                 cardCompany: widget.cardCompany,
                 numberTextSize: widget.numberTextSize,
                 expiryTextSize: widget.expiryTextSize,
@@ -305,8 +311,9 @@ class _CreditCardInputImplState extends State<CreditCardInputImpl> {
                           ? 1
                           : 0,
                       duration: Duration(milliseconds: 500),
-                      child: ListView(
-                        shrinkWrap: true,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),

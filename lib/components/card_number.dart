@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:credit_card_input_form/constants/constanst.dart';
 
 class CardNumber extends StatelessWidget {
-  const CardNumber({this.obscured = false, this.fontSize});
+  const CardNumber({this.obscured = false, this.fontSize, this.name});
 
   final bool obscured;
   final double fontSize;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,10 @@ class CardNumber extends StatelessWidget {
       cardNumberStyle = kCardNumberTextStyle;
     }
 
-    if (obscured) {
+    if (name != null) {
+      cardNumber = name;
+      texts.add(Text(cardNumber, style: cardNumberStyle));
+    } else if (obscured) {
       defaultNumber = "**** **** **** ";
       cardNumber = cardNumber.substring(cardNumber.length-4, cardNumber.length);
 

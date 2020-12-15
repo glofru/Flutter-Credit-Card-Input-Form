@@ -13,12 +13,13 @@ class FrontCardView extends StatelessWidget {
   final decoration;
   final cardCompany;
   final obscureNumber;
+  final String name;
 
   final double numberTextSize;
   final double expiryTextSize;
   final double nameTextSize;
 
-  FrontCardView({this.height, this.decoration, this.cardCompany, this.numberTextSize, this.expiryTextSize, this.nameTextSize, this.obscureNumber = false});
+  FrontCardView({this.height, this.decoration, this.cardCompany, this.numberTextSize, this.expiryTextSize, this.nameTextSize, this.name, this.obscureNumber = false});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class FrontCardView extends StatelessWidget {
             YellowBorder(),
             Align(
               alignment: Alignment.centerLeft,
-              child: CardNumber(obscured: obscureNumber, fontSize: numberTextSize),
+              child: CardNumber(obscured: obscureNumber, fontSize: numberTextSize, name: name),
             ),
             Align(alignment: Alignment.topRight, child: CardLogo(company: cardCompany)),
             Align(
