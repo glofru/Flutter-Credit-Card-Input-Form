@@ -27,7 +27,7 @@ class CardNumber extends StatelessWidget {
       cardNumberStyle = kCardNumberTextStyle;
     }
 
-    if (name != null) {
+    if (name != null && name.isNotEmpty) {
       cardNumber = name;
       texts.add(Text(cardNumber, style: cardNumberStyle));
     } else if (obscured) {
